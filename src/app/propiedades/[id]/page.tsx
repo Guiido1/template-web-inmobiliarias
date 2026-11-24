@@ -6,6 +6,8 @@ import { getAllProperties, getPropertyById } from "@/lib/properties-content";
 import { whatsappLink } from "@/lib/whatsapp";
 import { PropertyStructuredData } from "@/components/StructuredData";
 import { siteUrl } from "@/lib/site";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { plan } from "@/config/plan";
 
 const formatoUSD = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -101,6 +103,12 @@ export default async function PropertyDetailPage({
                 className="object-cover"
                 priority={index === 0}
               />
+              {index === 0 && plan.features.favoritos && (
+                <FavoriteButton
+                  id={property.id}
+                  className="absolute right-3 top-3"
+                />
+              )}
             </div>
           ))}
         </div>
