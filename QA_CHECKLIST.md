@@ -47,6 +47,10 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
       catálogo real cargado.
 - [ ] Los posts del blog renderizan bien (frontmatter completo: `title`,
       `fecha`, `resumen`).
+- [ ] Chatbot: si el cliente tiene mensualidad, `plan.chatbotTier` está en
+      `"inteligente"` y `ANTHROPIC_API_KEY` está cargada en Netlify (probar
+      que responda); si no, está en `"basico"` y el flujo de botones llega
+      a resultados reales del catálogo.
 
 ## SEO
 - [ ] `/sitemap.xml` y `/robots.txt` responden correctamente en el deploy
@@ -58,6 +62,9 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
 - [ ] `npm audit` sin vulnerabilidades altas/críticas antes de entregar.
 - [ ] Ninguna variable sensible (API keys, tokens) committeada — todo vía
       variables de entorno de Netlify.
+- [ ] Dependabot activo en el repo del cliente (Settings → Code security →
+      confirmar que "Dependabot version updates" esté habilitado; el
+      archivo `.github/dependabot.yml` ya viene del template).
 - [ ] Si el cliente usa el panel `/admin`: checklist completo de
       `SECURITY_ADMIN.md` corrido y tildado (Identity invite-only + Git
       Gateway por rol) **antes** de avisarle que ya puede entrar.

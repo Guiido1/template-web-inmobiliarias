@@ -145,16 +145,19 @@ responda del otro lado.
 Ya decidido cómo funciona cada uno (ver tabla de arriba y `plan.ts`); falta
 construir el código:
 
-- **Auth de `/admin`** real (Netlify Identity) + protección anti-spam del
-  formulario de contacto (honeypot + rate limiting) + Dependabot habilitado.
 - **Funcionalidades distintivas** listadas en `plan.ts` → `features`:
   comparador de propiedades, favoritos, simulador de crédito hipotecario,
   testimonios de Google Maps, y las exclusivas de mensualidad (alertas,
   video/tour, versión en inglés).
-  ✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
-  Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, el
-  panel `/admin` (CMS headless Git-based) para propiedades y blog, y el
-  chatbot de dos niveles.
+
+✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
+Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, el
+panel `/admin` (CMS headless Git-based) para propiedades y blog, el
+chatbot de dos niveles, el honeypot/rate limit/saneo del formulario de
+contacto, y Dependabot (`.github/dependabot.yml`). Auth real de `/admin`:
+el mecanismo (Netlify Identity + Git Gateway) ya está integrado en el
+código — lo que queda por sitio es la configuración obligatoria del
+dashboard de Netlify, ver `SECURITY_ADMIN.md`.
 
 ## Convención de commits
 
