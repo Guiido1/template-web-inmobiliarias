@@ -3,6 +3,7 @@ import "./globals.css";
 import { brand } from "@/config/brand";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Analytics } from "@/components/Analytics";
 import { OrganizationStructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <OrganizationStructuredData />
+        <Analytics />
         <Header />
         {children}
         <Footer />

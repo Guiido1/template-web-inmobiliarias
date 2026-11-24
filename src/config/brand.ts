@@ -31,6 +31,12 @@ export const brand = {
     descripcionDefault:
       "Encontrá tu próxima propiedad premium en CABA y GBA zona norte. Casas, departamentos y countries seleccionados.",
   },
+
+  // Analítica para el reporte mensual al cliente (ver REPORTING_TEMPLATE.md).
+  // Dejar vacío = no se carga ningún script de analítica.
+  analytics: {
+    gaMeasurementId: "", // ej: "G-XXXXXXXXXX" (Google Analytics 4, gratis)
+  },
 };
 
 export type Brand = typeof brand;
