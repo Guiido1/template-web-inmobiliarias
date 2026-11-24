@@ -77,20 +77,40 @@ src/
 - `REPORTING_TEMPLATE.md` — plantilla del reporte mensual de resultados
   para clientes con mensualidad.
 
-## Pendiente / a definir
+## Qué es del template y qué es por cliente
 
-- **CMS headless Git-based** (tipo Decap CMS, con Netlify Identity + Git
-  Gateway) en `/admin` para que el cliente cargue propiedades y posts sin
-  tocar código.
-- **Chatbot** con dos niveles (básico guiado por botones / inteligente
-  con Claude Haiku) — pendiente de implementación.
-- **Auth de `/admin`** y gestión de secrets/env vars más allá de lo ya
-  cubierto en `netlify.toml` (headers de seguridad base) — protección
-  anti-spam del formulario de contacto, actualización de dependencias
-  (Dependabot).
-- Funcionalidades distintivas del plan base y del plan con mensualidad
-  (comparador de propiedades, favoritos, simulador de crédito, alertas,
-  video/tour, versión en inglés) — ver el plan del proyecto.
+Regla general: **todo se construye una sola vez acá, en el template.** Nunca
+se reescribe código a medida para un cliente puntual. Lo único que varía de
+un cliente a otro es configuración y contenido, nunca lógica:
+
+| Siempre igual (código del template)                                   | Varía por cliente (config/contenido)                          |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------- |
+| Mecanismo del CMS (`/admin`, Decap + Netlify Identity + Git Gateway)     | El *schema* de colecciones (qué campos tiene cada propiedad/post), definido una vez al clonar |
+| Componente del chatbot (ambos modos, básico e inteligente)              | El flag `chatbotTier` en `src/config/plan.ts` + el catálogo que se le pasa como contexto |
+| Auth de `/admin`, anti-spam del formulario (honeypot + rate limiting), config de Dependabot | Los *valores* de env vars (API keys, `NEXT_PUBLIC_SITE_URL`, `GA_MEASUREMENT_ID`) por sitio en Netlify |
+| Cada funcionalidad distintiva como componente reusable (comparador, favoritos, simulador de crédito, alertas, video/tour, inglés, testimonios, página de detalle, WhatsApp flotante, Open Graph) | Cuáles están prendidas, vía `src/config/plan.ts` → `features` (base vs. exclusivas de mensualidad) |
+| Branding (colores, textos, contacto)                                    | Los valores en `src/config/brand.ts`                             |
+
+En la práctica: para dar de alta un cliente nuevo nunca hace falta tocar un
+componente, solo completar `brand.ts` y `plan.ts`, y cargar contenido
+(catálogo, blog, reseñas).
+
+## Pendiente de implementación
+
+Ya decidido cómo funciona cada uno (ver tabla de arriba y `plan.ts`); falta
+construir el código:
+
+- **CMS headless Git-based** (Decap CMS + Netlify Identity + Git Gateway) en
+  `/admin`, para que el cliente cargue propiedades y posts sin tocar código.
+- **Chatbot** con los dos modos (básico guiado por botones / inteligente con
+  Claude Haiku), leyendo `plan.chatbotTier`.
+- **Auth de `/admin`** real (Netlify Identity) + protección anti-spam del
+  formulario de contacto (honeypot + rate limiting) + Dependabot habilitado.
+- **Funcionalidades distintivas** listadas en `plan.ts` → `features`:
+  comparador de propiedades, favoritos, simulador de crédito hipotecario,
+  testimonios de Google Maps, página de detalle por propiedad, WhatsApp
+  flotante, Open Graph, y las exclusivas de mensualidad (alertas, video/tour,
+  versión en inglés).
 
 ## Convención de commits
 
