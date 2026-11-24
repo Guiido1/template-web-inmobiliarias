@@ -1,6 +1,7 @@
 import { PropertySearch } from "@/components/PropertySearch";
 import { PropertyCatalogStructuredData } from "@/components/StructuredData";
 import { getAllProperties } from "@/lib/properties-content";
+import { plan } from "@/config/plan";
 
 export const metadata = { title: "Propiedades" };
 
@@ -18,7 +19,10 @@ export default function PropiedadesPage() {
           Filtrá por zona, tipo y presupuesto.
         </p>
       </div>
-      <PropertySearch properties={properties} />
+      <PropertySearch
+        properties={properties}
+        habilitarComparador={plan.features.comparadorPropiedades}
+      />
     </main>
   );
 }
