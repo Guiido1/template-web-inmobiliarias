@@ -68,8 +68,11 @@ src/
   components/                 # Header, Footer, Hero, PropertySearch, ContactForm
   content/properties/*.md      # catálogo de propiedades (editable vía /admin)
   content/blog/*.mdx            # posts del blog (editable vía /admin)
+  content/testimonios/*.md       # reseñas de Google Maps (editable vía /admin)
   lib/properties-content.ts      # carga el catálogo (solo server, usa fs)
   lib/properties.ts               # tipo Property + helpers (client-safe)
+  lib/favorites.ts                 # favoritos sin login (localStorage)
+  lib/mortgage.ts                   # cálculo del simulador de crédito
   app/
     page.tsx                      # home
     propiedades/                   # listado filtrable
@@ -145,18 +148,21 @@ responda del otro lado.
 Ya decidido cómo funciona cada uno (ver tabla de arriba y `plan.ts`); falta
 construir el código:
 
-- **Funcionalidades distintivas** listadas en `plan.ts` → `features`:
-  comparador de propiedades, favoritos, simulador de crédito hipotecario,
-  testimonios de Google Maps, y las exclusivas de mensualidad (alertas,
-  video/tour, versión en inglés).
+- **Exclusivas de mensualidad** listadas en `plan.ts` → `features`:
+  alertas personalizadas, video/tour, versión en inglés.
 
 ✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
 Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, el
 panel `/admin` (CMS headless Git-based) para propiedades y blog, el
 chatbot de dos niveles, el honeypot/rate limit/saneo del formulario de
-contacto, y Dependabot (`.github/dependabot.yml`). Auth real de `/admin`:
-el mecanismo (Netlify Identity + Git Gateway) ya está integrado en el
-código — lo que queda por sitio es la configuración obligatoria del
+contacto, Dependabot (`.github/dependabot.yml`), el comparador de
+propiedades (selección de 2-3 fichas desde `/propiedades` y vista
+comparativa), favoritos sin login (localStorage + compartir por
+WhatsApp), el simulador de crédito hipotecario (sistema francés, tasa
+editable desde `brand.ts`) y los testimonios de Google Maps (sin usar la
+API de Google Places, colección editable desde `/admin`). Auth real de
+`/admin`: el mecanismo (Netlify Identity + Git Gateway) ya está integrado
+en el código — lo que queda por sitio es la configuración obligatoria del
 dashboard de Netlify, ver `SECURITY_ADMIN.md`.
 
 ## Convención de commits
