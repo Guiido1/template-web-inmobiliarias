@@ -29,19 +29,23 @@ una vez por cliente y personalizarse editando un único archivo de config.
 2. **Editar la marca**: abrir `src/config/brand.ts` y completar nombre,
    slogan, colores, WhatsApp, email, dirección. No hace falta tocar ningún
    componente.
-3. **Cargar propiedades**: reemplazar los datos de ejemplo en
-   `src/data/properties.ts` (a futuro: panel `/admin` vía CMS headless
-   Git-based, ver sección "Pendiente" más abajo).
+3. **Cargar propiedades**: reemplazar los ejemplos en
+   `src/content/properties/` (un archivo `.md` por propiedad) — a mano o,
+   una vez desplegado, desde el panel `/admin`.
 4. **Cargar contenido de blog**: agregar archivos `.mdx` con frontmatter
-   (`title`, `fecha`, `resumen`) en `src/content/blog/`.
-5. **Reemplazar imágenes**: subir fotos reales a `public/properties/` y
-   actualizar las rutas en `properties.ts`.
+   (`title`, `fecha`, `resumen`) en `src/content/blog/`, también editable
+   desde `/admin`.
+5. **Reemplazar imágenes**: subir fotos reales a `public/properties/` (o
+   subirlas directo desde el panel, que las guarda ahí).
 6. **Deploy**: conectar el repo a Netlify. Configurar la variable de
    entorno `NEXT_PUBLIC_SITE_URL` con el dominio real del cliente (la usan
    el sitemap, robots.txt y los datos estructurados). El dominio lo
    registra el cliente a su nombre, apuntando el DNS al proyecto de
    Netlify.
-7. **Pasar el checklist de QA** (`QA_CHECKLIST.md`) antes de avisarle al
+7. **Asegurar el panel `/admin`**: correr el checklist completo de
+   `SECURITY_ADMIN.md` (Identity invite-only + Git Gateway por rol) antes
+   de invitar al cliente — nunca dejar esto para después.
+8. **Pasar el checklist de QA** (`QA_CHECKLIST.md`) antes de avisarle al
    cliente que el sitio está listo.
 
 ## Desarrollo local
@@ -57,21 +61,29 @@ Abrir [http://localhost:3000](http://localhost:3000).
 
 ```
 src/
-  config/brand.ts        # única fuente de verdad de marca por cliente
-  components/            # Header, Footer, Hero, PropertySearch, ContactForm
-  data/properties.ts      # catálogo de propiedades (reemplazar por cliente)
-  content/blog/*.mdx       # posts del blog
+  config/brand.ts            # única fuente de verdad de marca por cliente
+  config/plan.ts              # flags de plan/features por cliente
+  components/                 # Header, Footer, Hero, PropertySearch, ContactForm
+  content/properties/*.md      # catálogo de propiedades (editable vía /admin)
+  content/blog/*.mdx            # posts del blog (editable vía /admin)
+  lib/properties-content.ts      # carga el catálogo (solo server, usa fs)
+  lib/properties.ts               # tipo Property + helpers (client-safe)
   app/
-    page.tsx              # home
-    propiedades/           # listado filtrable
-    blog/                  # listado + post individual
-    contacto/              # formulario -> WhatsApp
-    landing-ads/            # landing de alta conversión para campañas pagas
+    page.tsx                      # home
+    propiedades/                   # listado filtrable
+    propiedades/[id]/               # ficha de detalle por propiedad
+    blog/                            # listado + post individual
+    contacto/                        # formulario -> WhatsApp
+    landing-ads/                      # landing de alta conversión para campañas pagas
+public/
+  admin/                              # panel Decap CMS (ver SECURITY_ADMIN.md)
 ```
 
 ## Documentos relacionados
 
 - `QA_CHECKLIST.md` — checklist a correr antes de entregar cualquier sitio.
+- `SECURITY_ADMIN.md` — checklist obligatorio de seguridad del panel
+  `/admin` (Identity invite-only + Git Gateway por rol), por cliente.
 - `UPGRADING.md` — cómo propagar mejoras de este template a los repos de
   clientes con mantenimiento.
 - `REPORTING_TEMPLATE.md` — plantilla del reporte mensual de resultados
@@ -100,8 +112,6 @@ componente, solo completar `brand.ts` y `plan.ts`, y cargar contenido
 Ya decidido cómo funciona cada uno (ver tabla de arriba y `plan.ts`); falta
 construir el código:
 
-- **CMS headless Git-based** (Decap CMS + Netlify Identity + Git Gateway) en
-  `/admin`, para que el cliente cargue propiedades y posts sin tocar código.
 - **Chatbot** con los dos modos (básico guiado por botones / inteligente con
   Claude Haiku), leyendo `plan.chatbotTier`.
 - **Auth de `/admin`** real (Netlify Identity) + protección anti-spam del
@@ -111,7 +121,8 @@ construir el código:
   testimonios de Google Maps, y las exclusivas de mensualidad (alertas,
   video/tour, versión en inglés).
   ✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
-  Open Graph/Twitter Card por propiedad, y el botón flotante de WhatsApp.
+  Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, y el
+  panel `/admin` (CMS headless Git-based) para propiedades y blog.
 
 ## Convención de commits
 

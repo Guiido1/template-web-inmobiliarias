@@ -6,8 +6,9 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
 ## Contenido y marca
 - [ ] `src/config/brand.ts` completo con los datos reales del cliente
       (nombre, slogan, colores, WhatsApp, email, teléfono, dirección).
-- [ ] `src/data/properties.ts` con el catálogo real (no las propiedades de
-      ejemplo del template).
+- [ ] `src/content/properties/*.md` con el catálogo real (no las
+      propiedades de ejemplo del template) — cargadas vía `/admin` o a
+      mano, no hace falta tocar componentes.
 - [ ] Imágenes reales en `public/properties/` (no los placeholders SVG).
 - [ ] `NEXT_PUBLIC_SITE_URL` configurada en las variables de entorno de
       Netlify con el dominio real del cliente (la usan `sitemap.ts`,
@@ -57,3 +58,6 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
 - [ ] `npm audit` sin vulnerabilidades altas/críticas antes de entregar.
 - [ ] Ninguna variable sensible (API keys, tokens) committeada — todo vía
       variables de entorno de Netlify.
+- [ ] Si el cliente usa el panel `/admin`: checklist completo de
+      `SECURITY_ADMIN.md` corrido y tildado (Identity invite-only + Git
+      Gateway por rol) **antes** de avisarle que ya puede entrar.
