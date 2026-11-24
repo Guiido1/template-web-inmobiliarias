@@ -21,17 +21,43 @@ collections:
     delete: true
     slug: "{{slug}}"
     identifier_field: titulo
-    summary: "{{titulo}} — {{zona}} — USD {{precio}}"
+    summary: "{{titulo}} — {{operacion}} — {{estado}} — {{moneda}} {{precio}}"
     fields:
       - { label: "Título", name: "titulo", widget: "string" }
+      - label: "Operación"
+        name: "operacion"
+        widget: "select"
+        options: ["Venta", "Alquiler"]
+        default: "Venta"
+      - label: "Estado"
+        name: "estado"
+        widget: "select"
+        options: ["Disponible", "Reservada", "Vendida", "Alquilada"]
+        default: "Disponible"
+        hint: "Vendida/Alquilada: sigue visible con la etiqueta, pero sale de la home, del chatbot y del simulador."
       - label: "Tipo"
         name: "tipo"
         widget: "select"
-        options: ["Casa", "Departamento", "Country", "Terreno"]
+        options: ["Casa", "Departamento", "PH", "Country", "Terreno", "Local", "Oficina"]
       - { label: "Zona", name: "zona", widget: "string" }
-      - { label: "Precio (USD)", name: "precio", widget: "number", value_type: "int" }
+      - label: "Ubicación para el mapa (opcional)"
+        name: "ubicacion"
+        widget: "string"
+        required: false
+        hint: "Barrio y localidad (ej. \"Nordelta, Tigre, Buenos Aires\"). Mejor aproximada que la dirección exacta."
+      - label: "Moneda"
+        name: "moneda"
+        widget: "select"
+        options: ["USD", "ARS"]
+        default: "USD"
+      - { label: "Precio (en la moneda elegida; si es alquiler, por mes)", name: "precio", widget: "number", value_type: "int" }
+      - { label: "Expensas (ARS por mes, opcional)", name: "expensas", widget: "number", value_type: "int", required: false }
       - { label: "Ambientes", name: "ambientes", widget: "number", value_type: "int", default: 0 }
-      - { label: "Metros cuadrados (m²)", name: "m2", widget: "number", value_type: "int" }
+      - { label: "Dormitorios", name: "dormitorios", widget: "number", value_type: "int", required: false }
+      - { label: "Baños", name: "banos", widget: "number", value_type: "int", required: false }
+      - { label: "Cocheras", name: "cocheras", widget: "number", value_type: "int", required: false }
+      - { label: "Superficie total (m²)", name: "m2", widget: "number", value_type: "int" }
+      - { label: "Superficie cubierta (m², opcional)", name: "m2Cubiertos", widget: "number", value_type: "int", required: false }
       - label: "Foto principal"
         name: "imagen"
         widget: "image"

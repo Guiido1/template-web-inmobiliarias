@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/propiedades`, changeFrequency: "daily", priority: 0.9 },
     { url: `${siteUrl}/blog`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${siteUrl}/contacto`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${siteUrl}/privacidad`, changeFrequency: "yearly", priority: 0.1 },
   ];
 
   const posts = getAllPosts().map((post) => ({

@@ -17,6 +17,13 @@ export function checkRateLimit(
   { limit, windowMs }: { limit: number; windowMs: number }
 ): boolean {
   const ahora = Date.now();
+
+  // Limpieza de ventanas vencidas para que el Map no crezca sin límite
+  // en instancias que quedan vivas mucho tiempo.
+  if (buckets.size > 5000) {
+    for (const [k, b] of buckets) if (ahora > b.resetAt) buckets.delete(k);
+  }
+
   const bucket = buckets.get(key);
 
   if (!bucket || ahora > bucket.resetAt) {

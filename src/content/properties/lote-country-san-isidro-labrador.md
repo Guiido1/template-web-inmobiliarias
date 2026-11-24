@@ -1,6 +1,10 @@
 ---
 titulo: "Lote en country San Isidro Labrador"
 tipo: "Terreno"
+operacion: "Venta"
+estado: "Disponible"
+moneda: "USD"
+ubicacion: "Pilar, Buenos Aires"
 zona: "Pilar"
 precio: 220000
 ambientes: 0

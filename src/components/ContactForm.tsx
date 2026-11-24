@@ -60,10 +60,12 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="contacto-nombre" className="mb-1 block text-sm font-medium text-slate-700">
           Nombre
         </label>
         <input
+          id="contacto-nombre"
+          autoComplete="name"
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           maxLength={MAX_NOMBRE}
@@ -72,10 +74,11 @@ export function ContactForm() {
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="contacto-consulta" className="mb-1 block text-sm font-medium text-slate-700">
           Consulta
         </label>
         <textarea
+          id="contacto-consulta"
           value={consulta}
           onChange={(e) => setConsulta(e.target.value)}
           rows={4}

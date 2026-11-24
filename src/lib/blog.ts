@@ -12,6 +12,7 @@ export type PostMeta = {
 };
 
 export function getAllPosts(): PostMeta[] {
+  if (!fs.existsSync(CONTENT_DIR)) return [];
   const archivos = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".mdx"));
 
   const posts = archivos.map((archivo) => {
@@ -27,6 +28,18 @@ export function getAllPosts(): PostMeta[] {
   });
 
   return posts.sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+}
+
+/** "2026-11-01" -> "1 de noviembre de 2026" (en UTC, para que no cambie de día según el huso). */
+export function formatearFecha(fecha: string): string {
+  const d = new Date(`${fecha}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return fecha;
+  return new Intl.DateTimeFormat("es-AR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(d);
 }
 
 export function getPostBySlug(slug: string) {

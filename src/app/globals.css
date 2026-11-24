@@ -2,29 +2,42 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
   /* Sobrescritas en runtime desde src/config/brand.ts (ver layout.tsx) */
   --brand-primario: #0f172a;
   --brand-acento: #b08968;
 }
 
+/* Sin modo oscuro a propósito: todos los componentes usan colores claros
+   fijos (text-slate-900, bg-white). Si algún día se quiere, hay que
+   hacerlo en todos los componentes a la vez, no solo cambiando el fondo. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-texto), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-titulos), Georgia, "Times New Roman", serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: #ffffff;
+  color: #171717;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Títulos con la tipografía de display de la marca. */
+h1,
+h2 {
+  font-family: var(--font-display);
+}
+
+/* Botones flotantes (WhatsApp, chat, favoritos): cuando la barra del
+   comparador está abierta (data-comparador en <html>, lo pone
+   ComparadorPropiedades), suben para no quedar tapados por ella. */
+.flotante {
+  transition: translate 200ms ease;
+}
+html[data-comparador] .flotante {
+  translate: 0 -6rem;
+}
+@media (min-width: 640px) {
+  html[data-comparador] .flotante {
+    translate: 0 -4.5rem;
+  }
 }

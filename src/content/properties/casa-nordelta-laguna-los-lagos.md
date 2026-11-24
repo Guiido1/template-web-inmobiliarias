@@ -1,6 +1,14 @@
 ---
 titulo: "Casa en Nordelta, laguna Los Lagos"
 tipo: "Casa"
+operacion: "Venta"
+estado: "Disponible"
+moneda: "USD"
+dormitorios: 4
+banos: 3
+cocheras: 2
+expensas: 450000
+ubicacion: "Nordelta, Tigre, Buenos Aires"
 zona: "Nordelta"
 precio: 650000
 ambientes: 5

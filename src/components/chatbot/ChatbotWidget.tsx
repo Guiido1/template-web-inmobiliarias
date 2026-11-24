@@ -20,7 +20,7 @@ export function ChatbotWidget({ properties }: { properties: Property[] }) {
   return (
     <>
       {abierto && (
-        <div className="fixed bottom-24 right-5 z-40 flex h-[28rem] w-80 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:w-96">
+        <div className="flotante fixed bottom-24 right-5 z-40 flex h-[min(28rem,calc(100dvh-8rem))] w-[calc(100vw-2.5rem)] max-w-96 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:w-96">
           <div className="flex items-center justify-between bg-[var(--brand-primario)] px-4 py-3 text-white">
             <span className="text-sm font-medium">Asistente virtual</span>
             <button
@@ -42,7 +42,7 @@ export function ChatbotWidget({ properties }: { properties: Property[] }) {
       <button
         onClick={() => setAbierto((v) => !v)}
         aria-label={abierto ? "Cerrar chat" : "Abrir chat"}
-        className="fixed bottom-24 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--brand-primario)] text-white shadow-lg transition-transform hover:scale-105"
+        className="flotante fixed bottom-24 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--brand-primario)] text-white shadow-lg transition-transform hover:scale-105"
         style={{ display: abierto ? "none" : "flex" }}
       >
         <svg

@@ -59,6 +59,10 @@ npm run dev
 
 Abrir [http://localhost:3000](http://localhost:3000).
 
+Tests de la lógica pura (cuota, formato de precios, orden del catálogo,
+slider): `npm test` (Node 22+, sin dependencias extra). También corren en
+la CI.
+
 ## Estructura
 
 ```
@@ -74,12 +78,19 @@ src/
   lib/favorites.ts                 # favoritos sin login (localStorage)
   lib/mortgage.ts                   # cálculo del simulador de crédito
   app/
-    page.tsx                      # home
-    propiedades/                   # listado filtrable
-    propiedades/[id]/               # ficha de detalle por propiedad
-    blog/                            # listado + post individual
-    contacto/                        # formulario -> WhatsApp
-    landing-ads/                      # landing de alta conversión para campañas pagas
+    layout.tsx                    # html/body, fuentes, metadata base, analítica
+    opengraph-image.tsx            # imagen por defecto al compartir links
+    not-found.tsx                  # 404 con la marca
+    (sitio)/                       # todo lo que lleva header, footer y flotantes
+      layout.tsx
+      page.tsx                     # home (hero + destacadas + buscador + reseñas)
+      propiedades/                 # listado filtrable
+      propiedades/[id]/            # ficha de detalle (mapa, simulador, WhatsApp)
+      blog/                        # listado + post individual
+      contacto/                    # formulario -> WhatsApp
+      privacidad/                  # política de privacidad (Ley 25.326)
+    landing-ads/                   # landing para campañas pagas: sin menú, noindex
+tests/                             # tests de lógica pura (`npm test`)
 public/
   admin/                              # panel Decap CMS (ver SECURITY_ADMIN.md)
 ```
@@ -145,11 +156,12 @@ responda del otro lado.
 
 ## Pendiente de implementación
 
-Ya decidido cómo funciona cada uno (ver tabla de arriba y `plan.ts`); falta
-construir el código:
+Exclusivas de mensualidad ya decididas, sin código todavía (se agrega su
+flag a `plan.ts` → `features` recién cuando exista el componente):
 
-- **Exclusivas de mensualidad** listadas en `plan.ts` → `features`:
-  alertas personalizadas, video/tour, versión en inglés.
+- Alertas personalizadas.
+- Video/tour virtual en la ficha.
+- Versión en inglés.
 
 ✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
 Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, el
@@ -163,7 +175,14 @@ editable desde `brand.ts`) y los testimonios de Google Maps (sin usar la
 API de Google Places, colección editable desde `/admin`). Auth real de
 `/admin`: el mecanismo (Netlify Identity + Git Gateway) ya está integrado
 en el código — lo que queda por sitio es la configuración obligatoria del
-dashboard de Netlify, ver `SECURITY_ADMIN.md`.
+dashboard de Netlify, ver `SECURITY_ADMIN.md` (incluye el aviso sobre el
+retiro de Git Gateway y las alternativas para clientes nuevos).
+
+También incluidos: menú mobile, propiedades en venta o alquiler (USD/ARS)
+con estado (disponible/reservada/vendida/alquilada), dormitorios, baños,
+cocheras, expensas y mapa; matrícula del corredor en el footer; página de
+privacidad; 404 y página de error; imagen por defecto para compartir;
+simulador en pesos UVA con tipo de cambio de referencia.
 
 ## Convención de commits
 

@@ -1,18 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Property, getZonas, getTipos } from "@/lib/properties";
+import { Property, getZonas, getTipos, rangoSlider, formatearMonto } from "@/lib/properties";
 import { ComparadorPropiedades } from "@/components/ComparadorPropiedades";
-import { FavoriteButton } from "@/components/FavoriteButton";
-import { plan } from "@/config/plan";
+import { PropertyCard } from "@/components/PropertyCard";
 
-const formatoUSD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+const PASO_PRECIO = 10000;
 
 const MAX_COMPARACION = 3;
 
@@ -30,14 +23,19 @@ export function PropertySearch({
 }) {
   const zonas = useMemo(() => getZonas(properties), [properties]);
   const tipos = useMemo(() => getTipos(properties), [properties]);
-  const precioMaximo = useMemo(
-    () => Math.max(...properties.map((p) => p.precio)),
+  // Slider solo sobre propiedades en USD (no tiene sentido mezclar monedas).
+  const rango = useMemo(
+    () =>
+      rangoSlider(
+        properties.filter((p) => p.moneda === "USD").map((p) => p.precio),
+        PASO_PRECIO
+      ),
     [properties]
   );
 
   const [zona, setZona] = useState<string>("Todas");
   const [tipo, setTipo] = useState<string>("Todos");
-  const [precioMax, setPrecioMax] = useState<number>(precioMaximo);
+  const [precioMax, setPrecioMax] = useState<number>(rango.max);
   const [seleccionadas, setSeleccionadas] = useState<string[]>([]);
 
   function alternarSeleccion(id: string) {
@@ -56,7 +54,7 @@ export function PropertySearch({
     return properties.filter((p: Property) => {
       if (zona !== "Todas" && p.zona !== zona) return false;
       if (tipo !== "Todos" && p.tipo !== tipo) return false;
-      if (p.precio > precioMax) return false;
+      if (p.moneda === "USD" && p.precio > precioMax) return false;
       return true;
     });
   }, [properties, zona, tipo, precioMax]);
@@ -65,6 +63,7 @@ export function PropertySearch({
     <section className="mx-auto max-w-6xl px-6 py-16">
       <div className="mb-8 flex flex-wrap gap-4">
         <select
+          aria-label="Zona"
           value={zona}
           onChange={(e) => setZona(e.target.value)}
           className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
@@ -76,6 +75,7 @@ export function PropertySearch({
         </select>
 
         <select
+          aria-label="Tipo de propiedad"
           value={tipo}
           onChange={(e) => setTipo(e.target.value)}
           className="rounded-lg border border-slate-200 px-3 py-2 text-sm"
@@ -86,75 +86,43 @@ export function PropertySearch({
           ))}
         </select>
 
+        {rango.max > 0 && (
         <label className="flex items-center gap-2 text-sm text-slate-600">
-          Hasta {formatoUSD.format(precioMax)}
+          Hasta {formatearMonto(precioMax, "USD")}
           <input
             type="range"
-            min={Math.min(...properties.map((p) => p.precio))}
-            max={Math.max(...properties.map((p) => p.precio))}
-            step={10000}
+            min={rango.min}
+            max={rango.max}
+            step={PASO_PRECIO}
             value={precioMax}
             onChange={(e) => setPrecioMax(Number(e.target.value))}
           />
         </label>
+        )}
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtradas.map((p) => {
           const estaSeleccionada = seleccionadas.includes(p.id);
           return (
-            <Link
+            <PropertyCard
               key={p.id}
-              href={`/propiedades/${p.id}`}
-              className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white"
-            >
-              <article>
-                <div className="relative h-44 w-full">
-                  <Image
-                    src={p.imagen}
-                    alt={p.titulo}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform group-hover:scale-105"
-                  />
-                  {plan.features.favoritos && (
-                    <FavoriteButton id={p.id} className="absolute right-3 top-3" />
-                  )}
-                </div>
-                <div className="p-5">
-                  <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                    {p.zona} · {p.tipo}
-                  </p>
-                  <h3 className="mt-1 font-medium text-slate-900">{p.titulo}</h3>
-                  <p className="mt-2 text-sm text-slate-500">
-                    {p.ambientes > 0 ? `${p.ambientes} amb. · ` : ""}
-                    {p.m2} m²
-                  </p>
-                  <p className="mt-3 text-lg font-semibold text-slate-900">
-                    {formatoUSD.format(p.precio)}
-                  </p>
-
-                  {habilitarComparador && (
-                    <label
-                      className="mt-3 flex items-center gap-2 text-sm text-slate-600"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={estaSeleccionada}
-                        disabled={
-                          !estaSeleccionada &&
-                          seleccionadas.length >= MAX_COMPARACION
-                        }
-                        onChange={() => alternarSeleccion(p.id)}
-                        className="h-4 w-4 rounded border-slate-300"
-                      />
-                      Comparar
-                    </label>
-                  )}
-                </div>
-              </article>
-            </Link>
+              property={p}
+              acciones={
+                habilitarComparador && (
+                  <label className="flex items-center gap-2 text-sm text-slate-600">
+                    <input
+                      type="checkbox"
+                      checked={estaSeleccionada}
+                      disabled={!estaSeleccionada && seleccionadas.length >= MAX_COMPARACION}
+                      onChange={() => alternarSeleccion(p.id)}
+                      className="h-4 w-4 rounded border-slate-300"
+                    />
+                    Comparar
+                  </label>
+                )
+              }
+            />
           );
         })}
 

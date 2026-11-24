@@ -1,14 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Property } from "@/lib/properties";
-
-const formatoUSD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+import { Property, formatearPrecio, resumenSuperficie } from "@/lib/properties";
 
 /**
  * Barra flotante + modal de comparación lado a lado, para
@@ -34,7 +28,19 @@ export function ComparadorPropiedades({
     .map((id) => properties.find((p) => p.id === id))
     .filter((p): p is Property => Boolean(p));
 
-  if (elegidas.length === 0) return null;
+  // Avisa a los botones flotantes (clase .flotante, ver globals.css) que
+  // suban mientras la barra está abierta, para no quedar tapados.
+  const hayElegidas = elegidas.length > 0;
+  useEffect(() => {
+    const html = document.documentElement;
+    if (hayElegidas) html.dataset.comparador = "";
+    else delete html.dataset.comparador;
+    return () => {
+      delete html.dataset.comparador;
+    };
+  }, [hayElegidas]);
+
+  if (!hayElegidas) return null;
 
   // Unión de todas las características de las propiedades elegidas, para
   // poder mostrar una fila por característica con un check por propiedad.
@@ -129,7 +135,7 @@ export function ComparadorPropiedades({
                 <tbody>
                   <FilaComparacion
                     etiqueta="Precio"
-                    valores={elegidas.map((p) => formatoUSD.format(p.precio))}
+                    valores={elegidas.map((p) => formatearPrecio(p))}
                   />
                   <FilaComparacion
                     etiqueta="Tipo"
@@ -138,6 +144,14 @@ export function ComparadorPropiedades({
                   <FilaComparacion
                     etiqueta="Zona"
                     valores={elegidas.map((p) => p.zona)}
+                  />
+                  <FilaComparacion
+                    etiqueta="Operación"
+                    valores={elegidas.map((p) => `${p.operacion} · ${p.estado}`)}
+                  />
+                  <FilaComparacion
+                    etiqueta="Superficie y ambientes"
+                    valores={elegidas.map((p) => resumenSuperficie(p) || "—")}
                   />
                   <FilaComparacion
                     etiqueta="Ambientes"

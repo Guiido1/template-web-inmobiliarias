@@ -1,10 +1,25 @@
+import Image from "next/image";
 import Link from "next/link";
 import { brand } from "@/config/brand";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-[color:var(--brand-primario)] text-white">
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
+      {brand.heroImagen && (
+        <>
+          <Image
+            src={brand.heroImagen}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          {/* Capa oscura para que el texto se lea sobre cualquier foto. */}
+          <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+        </>
+      )}
+      <div className="relative mx-auto max-w-6xl px-6 py-24 sm:py-32">
         <p className="mb-3 text-sm font-medium tracking-wide text-[color:var(--brand-acento)]">
           {brand.zona}
         </p>

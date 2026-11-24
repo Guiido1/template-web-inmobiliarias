@@ -9,12 +9,16 @@ import { siteUrl } from "@/lib/site";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { SimuladorCredito } from "@/components/SimuladorCredito";
 import { plan } from "@/config/plan";
+import { EtiquetaEstado } from "@/components/PropertyCard";
+import {
+  estaDisponible,
+  formatearMonto,
+  formatearPrecio,
+  resumenSuperficie,
+} from "@/lib/properties";
 
-const formatoUSD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+// Solo las fichas que existen: cualquier otro id es 404 directo.
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return getAllProperties().map((p) => ({ id: p.id }));
@@ -32,7 +36,7 @@ export async function generateMetadata({
     return {};
   }
 
-  const titulo = `${property.titulo} — ${formatoUSD.format(property.precio)}`;
+  const titulo = `${property.titulo} — ${formatearPrecio(property)}`;
   const descripcion =
     property.descripcion ??
     `${property.tipo} en ${property.zona}, ${property.m2} m².`;
@@ -72,9 +76,7 @@ export default async function PropertyDetailPage({
   }
 
   const imagenes = property.imagenes ?? [property.imagen];
-  const mensajeWhatsapp = `Hola, me interesa la propiedad "${property.titulo}" (${formatoUSD.format(
-    property.precio
-  )}). ¿Podemos coordinar una visita?`;
+  const mensajeWhatsapp = `Hola, me interesa la propiedad "${property.titulo}" (${formatearPrecio(property)}). ¿Podemos coordinar una visita?`;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-16">
@@ -121,13 +123,20 @@ export default async function PropertyDetailPage({
           <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
             {property.titulo}
           </h1>
+          <EtiquetaEstado property={property} className="mt-3" />
           <p className="mt-3 text-sm text-slate-500">
-            {property.ambientes > 0 ? `${property.ambientes} amb. · ` : ""}
-            {property.m2} m²
+            {resumenSuperficie(property)}
+            {property.m2Cubiertos ? ` (${property.m2Cubiertos} m² cubiertos)` : ""}
+            {property.cocheras ? ` · ${property.cocheras} coch.` : ""}
           </p>
           <p className="mt-4 text-3xl font-semibold text-slate-900">
-            {formatoUSD.format(property.precio)}
+            {formatearPrecio(property)}
           </p>
+          {property.expensas ? (
+            <p className="mt-1 text-sm text-slate-500">
+              Expensas: {formatearMonto(property.expensas, "ARS")}/mes
+            </p>
+          ) : null}
 
           {property.descripcion && (
             <p className="mt-6 text-slate-600">{property.descripcion}</p>
@@ -158,9 +167,27 @@ export default async function PropertyDetailPage({
         </div>
       </div>
 
-      {plan.features.simuladorCreditoHipotecario && (
-        <SimuladorCredito precioPropiedad={property.precio} />
+      {property.ubicacion && (
+        <section className="mt-10">
+          <h2 className="text-lg font-semibold text-slate-900">Ubicación</h2>
+          <p className="mt-1 text-sm text-slate-500">{property.ubicacion}</p>
+          {/* Embed público de Google Maps: sin API key ni costo. */}
+          <iframe
+            title={`Mapa de ${property.ubicacion}`}
+            src={`https://www.google.com/maps?q=${encodeURIComponent(property.ubicacion)}&output=embed`}
+            className="mt-4 h-72 w-full rounded-2xl border-0"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </section>
       )}
+
+      {plan.features.simuladorCreditoHipotecario &&
+        property.operacion === "Venta" &&
+        property.moneda === "USD" &&
+        estaDisponible(property) && (
+          <SimuladorCredito precioPropiedad={property.precio} />
+        )}
     </main>
   );
 }

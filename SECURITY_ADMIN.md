@@ -1,5 +1,20 @@
 # Seguridad del panel `/admin` — checklist obligatorio por cliente
 
+> ⚠️ **Estado de Git Gateway (nov. 2026):** Netlify anunció el retiro de
+> Netlify Identity y después lo revirtió (feb. 2026), pero **Git Gateway
+> sigue marcado como deprecado**. Para los sitios ya entregados sigue
+> funcionando; para clientes nuevos, evaluar antes de dar de alta:
+> - **Decap con backend `github`** (Netlify como proveedor OAuth): cada
+>   editor necesita cuenta de GitHub con acceso al repo.
+> - **Sveltia CMS**: reemplazo directo de Decap (mismo `config.yml`),
+>   habla con GitHub sin gateway.
+> - La opción nueva de inicio de sesión de Decap 3.17+ (sin cuenta de Git
+>   ni de Identity).
+>
+> Cualquier cambio de backend se hace UNA vez acá en el template y se
+> propaga con `UPGRADING.md`. Decap está fijado a una versión exacta con
+> hash de integridad en `public/admin/index.html`.
+
 El código de este repo (Decap CMS + widget de Identity en `public/admin/`)
 **no protege el acceso por sí solo.** Es solo la interfaz. Lo que realmente
 impide que entre cualquiera son dos configuraciones del dashboard de
@@ -64,9 +79,8 @@ intento de guardar cambios.
 
 ## 5. Revocar acceso (dar de baja a un cliente o a quien ya no deba editar)
 
-Sigue el mismo proceso ya documentado en `plan-objetivos.md` →
-"Proceso de baja/cancelación": al cancelar la mensualidad (o si hace falta
-revocar acceso por cualquier otro motivo), borrar al usuario desde
+Al cancelar la mensualidad (o si hace falta revocar acceso por cualquier
+otro motivo), borrar al usuario desde
 **Identity → [usuario] → Delete user** en el dashboard del sitio. Esto
 corta el acceso al panel de inmediato — el catálogo/blog ya cargados
 siguen intactos en el repo, solo deja de poder editarlos esa persona.

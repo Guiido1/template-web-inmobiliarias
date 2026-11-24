@@ -1,6 +1,13 @@
 ---
 titulo: "Casa a estrenar en Vicente López"
 tipo: "Casa"
+operacion: "Venta"
+estado: "Reservada"
+moneda: "USD"
+dormitorios: 3
+banos: 2
+cocheras: 2
+ubicacion: "Vicente López, Buenos Aires"
 zona: "Vicente López"
 precio: 395000
 ambientes: 4

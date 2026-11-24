@@ -16,13 +16,17 @@ dijeron.
 
 - **Marca/contacto**: nombre, slogan, zona, colorPrimario, colorAcento,
   whatsapp, email, teléfono, dirección, calendarioUrl, instagram,
-  facebook, seo.tituloDefault, seo.descripcionDefault, gaMeasurementId.
-- **Plan**: mensualidad (sí/no), chatbotTier, tasa de interés del
-  simulador, features exclusivas de mensualidad activas (si aplica).
+  facebook, seo.tituloDefault, seo.descripcionDefault, gaMeasurementId,
+  heroImagen (opcional), **matrícula del corredor (nombre + número,
+  obligatoria)**.
+- **Plan**: chatbotTier ("inteligente" solo con mensualidad), features
+  activas, tasa UVA y tipo de cambio de referencia del simulador.
 - **Google Reviews**: calificación real + cantidad real de reseñas, y 5
   reseñas (calificación, texto, autor, link a Maps — sin foto).
-- **Catálogo**: lista de propiedades (título, tipo, zona, precio,
-  ambientes, m², imagen(es), destacada, descripción, características).
+- **Catálogo**: lista de propiedades (título, operación venta/alquiler,
+  estado, tipo, zona, ubicación para el mapa, moneda, precio, expensas,
+  ambientes, dormitorios, baños, cocheras, m² totales/cubiertos,
+  imagen(es), destacada, descripción, características).
 - **Blog** (opcional): posts (título, fecha, resumen, contenido).
 - **Repo**: `owner/repo-cliente` ya creado vacío en GitHub por Guido.
 - **Dominio**: si ya tiene uno o hay que indicarle que registre uno nuevo.
