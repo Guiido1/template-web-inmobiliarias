@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Analytics } from "@/components/Analytics";
 import { OrganizationStructuredData } from "@/components/StructuredData";
+import { WhatsappFloating } from "@/components/WhatsappFloating";
 
 export const metadata: Metadata = {
   title: brand.seo.tituloDefault,
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         {children}
         <Footer />
+        <WhatsappFloating />
       </body>
     </html>
   );
