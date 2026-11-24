@@ -16,6 +16,8 @@ una vez por cliente y personalizarse editando un único archivo de config.
   (`src/components/StructuredData.tsx`)
 - Analítica opcional para reporte al cliente: Google Analytics 4
   (`src/components/Analytics.tsx`, se activa cargando un ID en `brand.ts`)
+- Chatbot de dos niveles (básico sin costo / inteligente con Claude Haiku),
+  ver sección "Chatbot" más abajo.
 
 ## Cómo usar este template para un cliente nuevo
 
@@ -107,13 +109,31 @@ En la práctica: para dar de alta un cliente nuevo nunca hace falta tocar un
 componente, solo completar `brand.ts` y `plan.ts`, y cargar contenido
 (catálogo, blog, reseñas).
 
+## Chatbot
+
+Un solo componente (`src/components/chatbot/ChatbotWidget.tsx`) con dos
+modos; cuál se activa lo decide `plan.chatbotTier` en `src/config/plan.ts`:
+
+- **`"basico"`** (sin mensualidad, costo $0): `BasicChatbot.tsx`, guiado
+  por botones (tipo → zona → presupuesto) sobre el catálogo ya cargado en
+  la página. No hace ninguna llamada de red.
+- **`"inteligente"`** (exclusivo de mensualidad): `SmartChatbot.tsx`, texto
+  libre contra `/api/chat`, que llama a Claude Haiku con el catálogo
+  completo como contexto. Requiere la variable de entorno
+  `ANTHROPIC_API_KEY` en Netlify (ver `.env.example`) — sin ella, el
+  endpoint responde un error controlado y el resto del sitio sigue
+  funcionando normal.
+
+Topes de costo/abuso ya incluidos en `src/app/api/chat/route.ts` (no hace
+falta tocarlos por cliente): máximo de mensajes por conversación,
+`max_tokens` acotado por respuesta, y un rate limit básico por IP
+(`src/lib/rateLimiter.ts` — best-effort, documentado ahí mismo).
+
 ## Pendiente de implementación
 
 Ya decidido cómo funciona cada uno (ver tabla de arriba y `plan.ts`); falta
 construir el código:
 
-- **Chatbot** con los dos modos (básico guiado por botones / inteligente con
-  Claude Haiku), leyendo `plan.chatbotTier`.
 - **Auth de `/admin`** real (Netlify Identity) + protección anti-spam del
   formulario de contacto (honeypot + rate limiting) + Dependabot habilitado.
 - **Funcionalidades distintivas** listadas en `plan.ts` → `features`:
@@ -121,8 +141,9 @@ construir el código:
   testimonios de Google Maps, y las exclusivas de mensualidad (alertas,
   video/tour, versión en inglés).
   ✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
-  Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, y el
-  panel `/admin` (CMS headless Git-based) para propiedades y blog.
+  Open Graph/Twitter Card por propiedad, el botón flotante de WhatsApp, el
+  panel `/admin` (CMS headless Git-based) para propiedades y blog, y el
+  chatbot de dos niveles.
 
 ## Convención de commits
 
