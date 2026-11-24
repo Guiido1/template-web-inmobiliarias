@@ -124,10 +124,21 @@ modos; cuál se activa lo decide `plan.chatbotTier` en `src/config/plan.ts`:
   endpoint responde un error controlado y el resto del sitio sigue
   funcionando normal.
 
-Topes de costo/abuso ya incluidos en `src/app/api/chat/route.ts` (no hace
-falta tocarlos por cliente): máximo de mensajes por conversación,
-`max_tokens` acotado por respuesta, y un rate limit básico por IP
-(`src/lib/rateLimiter.ts` — best-effort, documentado ahí mismo).
+Topes de costo/abuso ya incluidos (`src/lib/chatbotConfig.ts`, compartido
+entre el endpoint y la UI para que no se desincronicen): máximo de 30
+mensajes por conversación, `max_tokens` acotado por respuesta, y un rate
+limit básico por IP (`src/lib/rateLimiter.ts` — best-effort, documentado
+ahí mismo).
+
+La derivación a WhatsApp es progresiva, no un corte estático al final de
+la conversación: a partir de cierta cantidad de mensajes aparece una
+sugerencia liviana y descartable para pasar a WhatsApp; más adelante se
+vuelve una sugerencia fija (no descartable); y al llegar al tope, es
+obligatoria. En los tres casos se muestra el mismo formulario corto
+(`WhatsappHandoffForm.tsx`: nombre, teléfono opcional, resumen de lo que
+busca — prellenado automáticamente con sus últimos mensajes) que arma el
+mensaje de WhatsApp ya completo, para no hacerle perder tiempo a quien
+responda del otro lado.
 
 ## Pendiente de implementación
 

@@ -1,17 +1,27 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { brand } from "@/config/brand";
-import { whatsappLink } from "@/lib/whatsapp";
+import {
+  MAX_MENSAJES_POR_CONVERSACION,
+  UMBRAL_PRIORITARIO_WHATSAPP,
+  UMBRAL_SUGERENCIA_WHATSAPP,
+} from "@/lib/chatbotConfig";
+import { WhatsappHandoffForm } from "./WhatsappHandoffForm";
 
 type Mensaje = { role: "user" | "assistant"; content: string };
-
-const MAX_MENSAJES = 16; // debe coincidir con el tope del endpoint (ver api/chat/route.ts)
+type EtapaDerivacion = "normal" | "sugerencia" | "prioritario" | "limite";
 
 /**
  * Chatbot con Claude Haiku — texto libre, catálogo completo como contexto
  * (ver src/app/api/chat/route.ts). Exclusivo de clientes con mensualidad
  * (plan.chatbotTier === "inteligente").
+ *
+ * La derivación a WhatsApp es progresiva, no un corte estático al final:
+ * a medida que la conversación avanza (ver chatbotConfig.ts), se va
+ * sugiriendo pasar a WhatsApp cada vez con más énfasis, siempre con el
+ * formulario corto ya completado para no hacerle perder tiempo a quien
+ * responda del otro lado.
  */
 export function SmartChatbot() {
   const [mensajes, setMensajes] = useState<Mensaje[]>([
@@ -23,9 +33,29 @@ export function SmartChatbot() {
   const [input, setInput] = useState("");
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sugerenciaDescartada, setSugerenciaDescartada] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const limiteAlcanzado = mensajes.length >= MAX_MENSAJES;
+  const etapa: EtapaDerivacion = useMemo(() => {
+    if (mensajes.length >= MAX_MENSAJES_POR_CONVERSACION) return "limite";
+    if (mensajes.length >= UMBRAL_PRIORITARIO_WHATSAPP) return "prioritario";
+    if (mensajes.length >= UMBRAL_SUGERENCIA_WHATSAPP) return "sugerencia";
+    return "normal";
+  }, [mensajes.length]);
+
+  const limiteAlcanzado = etapa === "limite";
+  const mostrarHandoff =
+    etapa !== "normal" && !(etapa === "sugerencia" && sugerenciaDescartada);
+
+  // Resumen automático a partir de lo último que escribió la persona, para
+  // no obligarla a retipear todo si pasa a WhatsApp.
+  const resumenAutomatico = useMemo(() => {
+    const ultimosMensajesUsuario = mensajes
+      .filter((m) => m.role === "user")
+      .slice(-3)
+      .map((m) => m.content);
+    return ultimosMensajesUsuario.join(" / ").slice(0, 300);
+  }, [mensajes]);
 
   async function enviar(e: FormEvent) {
     e.preventDefault();
@@ -83,20 +113,22 @@ export function SmartChatbot() {
           </p>
         )}
         {error && <p className="text-xs text-red-500">{error}</p>}
-        {limiteAlcanzado && (
-          <div className="space-y-2 rounded-xl border border-slate-200 p-3">
-            <p className="text-slate-600">
-              Llegamos al límite de esta conversación. Sigamos por WhatsApp para coordinar.
-            </p>
-            <a
-              href={whatsappLink(`Hola ${brand.nombre}, vengo del chat del sitio.`)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-full bg-green-600 px-4 py-2 text-center font-medium text-white"
-            >
-              Hablar por WhatsApp
-            </a>
-          </div>
+
+        {mostrarHandoff && (
+          <WhatsappHandoffForm
+            titulo={
+              etapa === "limite"
+                ? "Llegamos al límite de esta conversación — sigamos por WhatsApp:"
+                : etapa === "prioritario"
+                  ? "Para ir más rápido, te recomendamos continuar por WhatsApp:"
+                  : "¿Querés que sigamos por WhatsApp? Es más ágil para coordinar:"
+            }
+            resumenInicial={resumenAutomatico}
+            urgente={etapa !== "sugerencia"}
+            onDescartar={
+              etapa === "sugerencia" ? () => setSugerenciaDescartada(true) : undefined
+            }
+          />
         )}
       </div>
 

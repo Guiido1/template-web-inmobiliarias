@@ -2,14 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { brand } from "@/config/brand";
 import { getAllProperties } from "@/lib/properties-content";
 import { checkRateLimit } from "@/lib/rateLimiter";
+import {
+  MAX_MENSAJES_POR_CONVERSACION,
+  MAX_CARACTERES_POR_MENSAJE,
+  MAX_TOKENS_RESPUESTA,
+} from "@/lib/chatbotConfig";
 
 export const runtime = "nodejs";
 
-// --- Topes de costo y abuso (ver REPORTING_TEMPLATE.md / plan-objetivos.md
-// para la estimación de costo real por conversación con estos topes) ---
-const MAX_MENSAJES_POR_CONVERSACION = 16; // 8 idas y vueltas
-const MAX_CARACTERES_POR_MENSAJE = 1000;
-const MAX_TOKENS_RESPUESTA = 350;
+// Topes de costo/abuso que de verdad limitan el gasto máximo posible por
+// conversación — compartidos con la UI vía chatbotConfig.ts (ver
+// REPORTING_TEMPLATE.md / plan-objetivos.md para la estimación de costo
+// real por conversación con estos topes).
 const RATE_LIMIT = { limit: 15, windowMs: 60_000 }; // 15 requests/min por IP (best-effort, ver rateLimiter.ts)
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
