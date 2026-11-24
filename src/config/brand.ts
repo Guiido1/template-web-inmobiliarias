@@ -21,6 +21,15 @@ export const brand = {
   // URL de agenda externa (Calendly, Cal.com, etc). Dejar vacío si no aplica:
   calendarioUrl: "",
 
+  // Simulador de crédito hipotecario (features.simuladorCreditoHipotecario
+  // en plan.ts): tasa anual fija que se muestra pre-cargada en el
+  // simulador, pero el visitante puede editarla. Es un valor orientativo
+  // del cliente (ej. acuerdo con un banco), no una tasa real de mercado —
+  // el simulador siempre aclara que es una estimación.
+  simuladorCredito: {
+    tasaAnualPorcentaje: 8,
+  },
+
   redes: {
     instagram: "",
     facebook: "",

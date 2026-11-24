@@ -7,6 +7,7 @@ import { whatsappLink } from "@/lib/whatsapp";
 import { PropertyStructuredData } from "@/components/StructuredData";
 import { siteUrl } from "@/lib/site";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { SimuladorCredito } from "@/components/SimuladorCredito";
 import { plan } from "@/config/plan";
 
 const formatoUSD = new Intl.NumberFormat("en-US", {
@@ -156,6 +157,10 @@ export default async function PropertyDetailPage({
           </a>
         </div>
       </div>
+
+      {plan.features.simuladorCreditoHipotecario && (
+        <SimuladorCredito precioPropiedad={property.precio} />
+      )}
     </main>
   );
 }
