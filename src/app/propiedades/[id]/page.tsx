@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { properties } from "@/data/properties";
 import { whatsappLink } from "@/lib/whatsapp";
 import { PropertyStructuredData } from "@/components/StructuredData";
+import { siteUrl } from "@/lib/site";
 
 const formatoUSD = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -13,6 +15,45 @@ const formatoUSD = new Intl.NumberFormat("en-US", {
 
 export function generateStaticParams() {
   return properties.map((p) => ({ id: p.id }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const property = properties.find((p) => p.id === id);
+
+  if (!property) {
+    return {};
+  }
+
+  const titulo = `${property.titulo} — ${formatoUSD.format(property.precio)}`;
+  const descripcion =
+    property.descripcion ??
+    `${property.tipo} en ${property.zona}, ${property.m2} m².`;
+  const imagen = property.imagenes?.[0] ?? property.imagen;
+  const url = `${siteUrl}/propiedades/${property.id}`;
+
+  return {
+    title: titulo,
+    description: descripcion,
+    alternates: { canonical: url },
+    openGraph: {
+      title: titulo,
+      description: descripcion,
+      url,
+      type: "website",
+      images: [{ url: `${siteUrl}${imagen}` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titulo,
+      description: descripcion,
+      images: [`${siteUrl}${imagen}`],
+    },
+  };
 }
 
 export default async function PropertyDetailPage({
