@@ -108,9 +108,10 @@ construir el código:
   formulario de contacto (honeypot + rate limiting) + Dependabot habilitado.
 - **Funcionalidades distintivas** listadas en `plan.ts` → `features`:
   comparador de propiedades, favoritos, simulador de crédito hipotecario,
-  testimonios de Google Maps, página de detalle por propiedad, WhatsApp
-  flotante, Open Graph, y las exclusivas de mensualidad (alertas, video/tour,
-  versión en inglés).
+  testimonios de Google Maps, y las exclusivas de mensualidad (alertas,
+  video/tour, versión en inglés).
+  ✅ Ya implementadas: página de detalle por propiedad (`/propiedades/[id]`),
+  Open Graph/Twitter Card por propiedad, y el botón flotante de WhatsApp.
 
 ## Convención de commits
 
