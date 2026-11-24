@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Property, properties, tipos, zonas } from "@/data/properties";
 
 const formatoUSD = new Intl.NumberFormat("en-US", {
@@ -69,8 +70,15 @@ export function PropertySearch() {
             key={p.id}
             className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={p.imagen} alt={p.titulo} className="h-44 w-full object-cover" />
+            <div className="relative h-44 w-full">
+              <Image
+                src={p.imagen}
+                alt={p.titulo}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
             <div className="p-5">
               <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
                 {p.zona} · {p.tipo}
