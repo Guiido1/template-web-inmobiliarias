@@ -3,6 +3,7 @@ import "./globals.css";
 import { brand } from "@/config/brand";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { OrganizationStructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: brand.seo.tituloDefault,
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       }
     >
       <body className="min-h-full flex flex-col">
+        <OrganizationStructuredData />
         <Header />
         {children}
         <Footer />
