@@ -1,8 +1,9 @@
 import { Hero } from "@/components/Hero";
 import { PropertySearch } from "@/components/PropertySearch";
-import { properties } from "@/data/properties";
+import { getAllProperties } from "@/lib/properties-content";
 
 export default function HomePage() {
+  const properties = getAllProperties();
   const destacadas = properties.filter((p) => p.destacada);
 
   return (
@@ -16,7 +17,7 @@ export default function HomePage() {
           {destacadas.length} propiedades seleccionadas esta semana.
         </p>
       </section>
-      <PropertySearch />
+      <PropertySearch properties={properties} />
     </main>
   );
 }

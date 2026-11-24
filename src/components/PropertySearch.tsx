@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Property, properties, tipos, zonas } from "@/data/properties";
+import { Property, getZonas, getTipos } from "@/lib/properties";
 
 const formatoUSD = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -11,12 +11,20 @@ const formatoUSD = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 
-export function PropertySearch() {
+// Recibe las propiedades ya cargadas por el server component que la use
+// (home o /propiedades), porque leer el contenido (fs) no puede pasar en
+// un componente de cliente como este.
+export function PropertySearch({ properties }: { properties: Property[] }) {
+  const zonas = useMemo(() => getZonas(properties), [properties]);
+  const tipos = useMemo(() => getTipos(properties), [properties]);
+  const precioMaximo = useMemo(
+    () => Math.max(...properties.map((p) => p.precio)),
+    [properties]
+  );
+
   const [zona, setZona] = useState<string>("Todas");
   const [tipo, setTipo] = useState<string>("Todos");
-  const [precioMax, setPrecioMax] = useState<number>(
-    Math.max(...properties.map((p) => p.precio))
-  );
+  const [precioMax, setPrecioMax] = useState<number>(precioMaximo);
 
   const filtradas = useMemo(() => {
     return properties.filter((p: Property) => {
@@ -25,7 +33,7 @@ export function PropertySearch() {
       if (p.precio > precioMax) return false;
       return true;
     });
-  }, [zona, tipo, precioMax]);
+  }, [properties, zona, tipo, precioMax]);
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">

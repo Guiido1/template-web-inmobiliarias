@@ -1,5 +1,5 @@
 import { brand } from "@/config/brand";
-import { Property, properties } from "@/data/properties";
+import { Property } from "@/lib/properties";
 import { siteUrl } from "@/lib/site";
 
 // Datos estructurados (schema.org) vía JSON-LD. No cambian cómo se ve el
@@ -37,7 +37,11 @@ export function OrganizationStructuredData() {
  * Se usa en /propiedades. Cada item linkea a su página de detalle propia
  * (ver PropertyStructuredData más abajo, que se usa en esa página).
  */
-export function PropertyCatalogStructuredData() {
+export function PropertyCatalogStructuredData({
+  properties,
+}: {
+  properties: Property[];
+}) {
   const data = {
     "@context": "https://schema.org",
     "@type": "ItemList",

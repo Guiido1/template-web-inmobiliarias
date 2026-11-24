@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { getAllProperties } from "@/lib/properties-content";
 import { siteUrl } from "@/lib/site";
 
 // Sitemap generado automáticamente en cada build a partir de las rutas
@@ -21,5 +22,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...rutasFijas, ...posts];
+  const fichasDePropiedad = getAllProperties().map((p) => ({
+    url: `${siteUrl}/propiedades/${p.id}`,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  return [...rutasFijas, ...posts, ...fichasDePropiedad];
 }

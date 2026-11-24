@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { properties } from "@/data/properties";
+import { getAllProperties, getPropertyById } from "@/lib/properties-content";
 import { whatsappLink } from "@/lib/whatsapp";
 import { PropertyStructuredData } from "@/components/StructuredData";
 import { siteUrl } from "@/lib/site";
@@ -14,7 +14,7 @@ const formatoUSD = new Intl.NumberFormat("en-US", {
 });
 
 export function generateStaticParams() {
-  return properties.map((p) => ({ id: p.id }));
+  return getAllProperties().map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({
@@ -23,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const property = properties.find((p) => p.id === id);
+  const property = getPropertyById(id);
 
   if (!property) {
     return {};
@@ -62,7 +62,7 @@ export default async function PropertyDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const property = properties.find((p) => p.id === id);
+  const property = getPropertyById(id);
 
   if (!property) {
     notFound();

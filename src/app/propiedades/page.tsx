@@ -1,12 +1,15 @@
 import { PropertySearch } from "@/components/PropertySearch";
 import { PropertyCatalogStructuredData } from "@/components/StructuredData";
+import { getAllProperties } from "@/lib/properties-content";
 
 export const metadata = { title: "Propiedades" };
 
 export default function PropiedadesPage() {
+  const properties = getAllProperties();
+
   return (
     <main>
-      <PropertyCatalogStructuredData />
+      <PropertyCatalogStructuredData properties={properties} />
       <div className="mx-auto max-w-6xl px-6 pt-16">
         <h1 className="text-3xl font-semibold tracking-tight text-slate-900">
           Propiedades
@@ -15,7 +18,7 @@ export default function PropiedadesPage() {
           Filtrá por zona, tipo y presupuesto.
         </p>
       </div>
-      <PropertySearch />
+      <PropertySearch properties={properties} />
     </main>
   );
 }
