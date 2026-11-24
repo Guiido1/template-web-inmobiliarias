@@ -35,6 +35,23 @@ export const brand = {
     facebook: "",
   },
 
+  // Testimonios de Google Maps (features.testimoniosGoogleMaps en
+  // plan.ts), diseño de costo cero: NO usa la API de Google Places, es
+  // solo el valor único de calificación general que se muestra en el
+  // sitio ("4,9 ★ / +500 reseñas en Google"). Las reseñas puntuales viven
+  // en src/content/testimonios/*.md (editable desde /admin).
+  googleReviews: {
+    calificacion: 4.9,
+    // Cantidad REAL de reseñas en Google a la fecha. En el sitio se
+    // muestra redondeada hacia abajo al escalón de a 100 (ver
+    // src/lib/testimonios.ts → cantidadReseñasRedondeada) para no tener
+    // que editar este número cada vez que entra una reseña nueva — solo
+    // hace falta actualizarlo cuando cruza el próximo escalón de 100
+    // (ver cantidadResenasRedondeada en src/lib/testimonios.ts).
+    totalResenas: 537,
+    perfilUrl: "https://www.google.com/maps",
+  },
+
   seo: {
     tituloDefault: "Inmobiliaria Modelo — Propiedades premium en zona norte",
     descripcionDefault:

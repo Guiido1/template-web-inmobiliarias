@@ -1,7 +1,9 @@
 import { Hero } from "@/components/Hero";
 import { PropertySearch } from "@/components/PropertySearch";
 import { IdentityInviteRedirect } from "@/components/IdentityInviteRedirect";
+import { GoogleReviews } from "@/components/GoogleReviews";
 import { getAllProperties } from "@/lib/properties-content";
+import { plan } from "@/config/plan";
 
 export default function HomePage() {
   const properties = getAllProperties();
@@ -20,6 +22,7 @@ export default function HomePage() {
         </p>
       </section>
       <PropertySearch properties={properties} />
+      {plan.features.testimoniosGoogleMaps && <GoogleReviews />}
     </main>
   );
 }

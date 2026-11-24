@@ -47,6 +47,32 @@ collections:
         widget: "list"
         required: false
 
+  - name: "testimonios"
+    label: "Testimonios (Google Maps)"
+    folder: "src/content/testimonios"
+    extension: "md"
+    format: "frontmatter"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: nombre
+    summary: "{{nombre}} — {{calificacion}} ★"
+    # Sin foto de perfil (decisión tomada por protección de datos
+    # personales): no agregar un campo de imagen acá.
+    fields:
+      - { label: "Nombre del autor (tal como aparece en Google)", name: "nombre", widget: "string" }
+      - label: "Calificación"
+        name: "calificacion"
+        widget: "number"
+        value_type: "int"
+        min: 1
+        max: 5
+      - { label: "Texto de la reseña", name: "texto", widget: "text" }
+      - label: "Link a la reseña en Google Maps"
+        name: "link"
+        widget: "string"
+        hint: "Enlace \"Ver en Google Maps →\" a la ficha real de la reseña"
+
   - name: "blog"
     label: "Blog"
     folder: "src/content/blog"
