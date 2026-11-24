@@ -15,16 +15,22 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
 - [ ] Si el cliente tiene mensualidad: `gaMeasurementId` cargado en
       `brand.ts` (ver `REPORTING_TEMPLATE.md`).
 
-## Responsive / mobile
+## Responsive — mobile y desktop
 - [ ] Home, listado de propiedades, blog, contacto y landing-ads revisados
-      en un viewport mobile (Chrome DevTools, modo responsive) — la mayoría
-      del tráfico de campañas de Ads llega desde celular.
+      en viewport **mobile** (Chrome DevTools, modo responsive) — relevante
+      sobre todo para el tráfico que llega de campañas de Ads.
+- [ ] Los mismos revisados en **desktop** (1440px+) — para este nicho de
+      ticket alto es esperable una buena porción de tráfico desde
+      computadora (sesiones de investigación más largas, no solo un
+      vistazo rápido desde el celular), así que no alcanza con validar
+      solo mobile.
 - [ ] El menú y el formulario de contacto son usables con el teclado
-      virtual abierto (sin elementos tapados).
+      virtual abierto en mobile (sin elementos tapados).
 
 ## Performance
-- [ ] Lighthouse (Chrome DevTools > Lighthouse, modo "Navigation", mobile)
-      en la home y en `/propiedades`: apuntar a 90+ en Performance y SEO.
+- [ ] Lighthouse (Chrome DevTools > Lighthouse, modo "Navigation") en la
+      home y en `/propiedades`, corrido tanto en modo **mobile** como
+      **desktop**: apuntar a 90+ en Performance y SEO en ambos.
 - [ ] Las imágenes de propiedades cargan a través de `next/image` (no hay
       ningún `<img>` suelto sin optimizar en componentes nuevos).
 
