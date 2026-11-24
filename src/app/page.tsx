@@ -1,5 +1,6 @@
 import { Hero } from "@/components/Hero";
 import { PropertySearch } from "@/components/PropertySearch";
+import { IdentityInviteRedirect } from "@/components/IdentityInviteRedirect";
 import { getAllProperties } from "@/lib/properties-content";
 
 export default function HomePage() {
@@ -8,6 +9,7 @@ export default function HomePage() {
 
   return (
     <main>
+      <IdentityInviteRedirect />
       <Hero />
       <section className="mx-auto max-w-6xl px-6 py-16">
         <h2 className="text-2xl font-semibold tracking-tight text-slate-900">

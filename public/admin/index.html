@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- No indexar este panel: no es contenido público del sitio. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Panel de administración</title>
+    <!--
+      Seguridad: este archivo NO protege el acceso por sí solo. La
+      protección real son dos capas separadas, configuradas en el
+      dashboard de Netlify de este sitio (ver SECURITY_ADMIN.md):
+      1) Identity en modo "Invite only" (nadie se autoregistra).
+      2) Git Gateway restringido por rol (sin el rol asignado, ni
+         siquiera un usuario de Identity invitado puede escribir).
+    -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
+    <script>
+      // Si alguien llega sin sesión y hace login, lo manda de nuevo al
+      // panel (patrón estándar recomendado por Netlify Identity).
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

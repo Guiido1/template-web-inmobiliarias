@@ -1,0 +1,68 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# "simple": publica directo a main (sin revisión editorial previa). Coincide
+# con el flujo de git simple que ya usa este template. Si en algún cliente
+# puntual hiciera falta que alguien revise antes de publicar, cambiar a
+# "editorial_workflow".
+publish_mode: simple
+
+media_folder: "public/properties"
+public_folder: "/properties"
+
+collections:
+  - name: "propiedades"
+    label: "Propiedades"
+    folder: "src/content/properties"
+    extension: "md"
+    format: "frontmatter"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    identifier_field: titulo
+    summary: "{{titulo}} — {{zona}} — USD {{precio}}"
+    fields:
+      - { label: "Título", name: "titulo", widget: "string" }
+      - label: "Tipo"
+        name: "tipo"
+        widget: "select"
+        options: ["Casa", "Departamento", "Country", "Terreno"]
+      - { label: "Zona", name: "zona", widget: "string" }
+      - { label: "Precio (USD)", name: "precio", widget: "number", value_type: "int" }
+      - { label: "Ambientes", name: "ambientes", widget: "number", value_type: "int", default: 0 }
+      - { label: "Metros cuadrados (m²)", name: "m2", widget: "number", value_type: "int" }
+      - label: "Foto principal"
+        name: "imagen"
+        widget: "image"
+      - { label: "Destacada en portada", name: "destacada", widget: "boolean", required: false, default: false }
+      - { label: "Descripción", name: "descripcion", widget: "text", required: false }
+      - label: "Galería de fotos (opcional, además de la principal)"
+        name: "imagenes"
+        widget: "list"
+        required: false
+        field: { label: "Foto", name: "imagen", widget: "image" }
+      - label: "Características (una por línea)"
+        name: "caracteristicas"
+        widget: "list"
+        required: false
+
+  - name: "blog"
+    label: "Blog"
+    folder: "src/content/blog"
+    extension: "mdx"
+    format: "frontmatter"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{fecha}}"
+    fields:
+      - { label: "Título", name: "title", widget: "string" }
+      - label: "Fecha"
+        name: "fecha"
+        widget: "datetime"
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+      - { label: "Resumen", name: "resumen", widget: "text" }
+      - { label: "Contenido", name: "body", widget: "markdown" }
