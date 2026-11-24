@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { brand } from "@/config/brand";
+import { plan } from "@/config/plan";
+import { estaDisponible } from "@/lib/properties";
 import { getAllProperties } from "@/lib/properties-content";
 import { checkRateLimit } from "@/lib/rateLimiter";
 import {
@@ -11,20 +13,29 @@ import {
 export const runtime = "nodejs";
 
 // Topes de costo/abuso que de verdad limitan el gasto máximo posible por
-// conversación — compartidos con la UI vía chatbotConfig.ts (ver
-// REPORTING_TEMPLATE.md / plan-objetivos.md para la estimación de costo
-// real por conversación con estos topes).
+// conversación — compartidos con la UI vía chatbotConfig.ts.
 const RATE_LIMIT = { limit: 15, windowMs: 60_000 }; // 15 requests/min por IP (best-effort, ver rateLimiter.ts)
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
 function construirSystemPrompt(): string {
-  const catalogo = getAllProperties().map((p) => ({
+  const catalogo = getAllProperties()
+    .filter(estaDisponible)
+    .map((p) => ({
     titulo: p.titulo,
+    url: `/propiedades/${p.id}`,
     tipo: p.tipo,
+    operacion: p.operacion,
+    estado: p.estado,
     zona: p.zona,
-    precio_usd: p.precio,
+    precio: p.precio,
+    moneda: p.moneda,
+    precio_es_mensual: p.operacion === "Alquiler",
+    expensas_ars: p.expensas,
     ambientes: p.ambientes,
+    dormitorios: p.dormitorios,
+    banos: p.banos,
+    cocheras: p.cocheras,
     m2: p.m2,
     descripcion: p.descripcion,
     caracteristicas: p.caracteristicas,
@@ -44,6 +55,13 @@ Reglas estrictas:
 }
 
 export async function POST(req: NextRequest) {
+  // El endpoint solo existe para clientes con chatbot inteligente: en un
+  // sitio "basico" responde 404 aunque la API key esté cargada por error
+  // (la key es compartida entre clientes y el costo lo paga el estudio).
+  if (plan.chatbotTier !== "inteligente") {
+    return NextResponse.json({ error: "No disponible." }, { status: 404 });
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json(

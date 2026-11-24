@@ -4,10 +4,12 @@ import { IdentityInviteRedirect } from "@/components/IdentityInviteRedirect";
 import { GoogleReviews } from "@/components/GoogleReviews";
 import { getAllProperties } from "@/lib/properties-content";
 import { plan } from "@/config/plan";
+import { PropertyCard } from "@/components/PropertyCard";
+import { estaDisponible } from "@/lib/properties";
 
 export default function HomePage() {
   const properties = getAllProperties();
-  const destacadas = properties.filter((p) => p.destacada);
+  const destacadas = properties.filter((p) => p.destacada && estaDisponible(p));
 
   return (
     <main>
@@ -17,9 +19,13 @@ export default function HomePage() {
         <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
           Propiedades destacadas
         </h2>
-        <p className="mt-2 text-slate-500">
-          {destacadas.length} propiedades seleccionadas esta semana.
-        </p>
+        {destacadas.length > 0 && (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {destacadas.map((p) => (
+              <PropertyCard key={p.id} property={p} />
+            ))}
+          </div>
+        )}
       </section>
       <PropertySearch properties={properties} />
       {plan.features.testimoniosGoogleMaps && <GoogleReviews />}

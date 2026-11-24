@@ -138,6 +138,7 @@ export function SmartChatbot() {
           onChange={(e) => setInput(e.target.value)}
           disabled={cargando || limiteAlcanzado}
           placeholder="Escribí tu consulta…"
+          aria-label="Tu consulta"
           className="flex-1 rounded-full border border-slate-200 px-4 py-2 text-sm disabled:opacity-50"
         />
         <button

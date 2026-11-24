@@ -11,8 +11,8 @@ nada, coherente con que se hacen cargo de su propio sitio).
 
 Mientras la personalización de cada cliente viva únicamente en:
 - `src/config/brand.ts`
-- `src/data/properties.ts`
-- `src/content/blog/*.mdx`
+- `src/config/plan.ts`
+- `src/content/` (propiedades, testimonios y blog)
 - `public/` (imágenes y logo)
 
 ...y los **componentes y la lógica del template no se editen por cliente**,
@@ -35,7 +35,7 @@ La primera vez que se agrega el remote va a pedir `--allow-unrelated-
 histories` porque cada cliente hizo `git init` nuevo al clonarse (ver
 README, paso 1). Las veces siguientes no hace falta ese flag.
 
-Si aparece un conflicto en `brand.ts`, `properties.ts` o algún `.mdx`:
+Si aparece un conflicto en `brand.ts`, `plan.ts` o algún archivo de `src/content/`:
 siempre se resuelve quedándose con la versión del cliente (son
 justamente los archivos que nunca deberían venir del template).
 

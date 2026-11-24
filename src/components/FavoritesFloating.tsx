@@ -2,7 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { Property } from "@/lib/properties";
+import { Property, formatearPrecio } from "@/lib/properties";
 import {
   getFavoriteIdsServerSnapshot,
   getFavoriteIdsSnapshot,
@@ -11,12 +11,6 @@ import {
 } from "@/lib/favorites";
 import { whatsappLink } from "@/lib/whatsapp";
 import { siteUrl } from "@/lib/site";
-
-const formatoUSD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
 
 /**
  * Botón flotante global "Favoritos" con panel de la lista guardada y botón
@@ -44,7 +38,7 @@ export function FavoritesFloating({ properties }: { properties: Property[] }) {
       ? `Hola, estas son las propiedades que me interesan:\n\n${favoritas
           .map(
             (p) =>
-              `• ${p.titulo} — ${formatoUSD.format(p.precio)} (${siteUrl}/propiedades/${p.id})`
+              `• ${p.titulo} — ${formatearPrecio(p)} (${siteUrl}/propiedades/${p.id})`
           )
           .join("\n")}\n\n¿Podemos coordinar una consulta?`
       : "";
@@ -55,7 +49,7 @@ export function FavoritesFloating({ properties }: { properties: Property[] }) {
         type="button"
         onClick={() => setAbierto((v) => !v)}
         aria-label="Ver mis favoritos"
-        className="fixed bottom-5 left-5 z-50 flex h-14 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-slate-700 shadow-lg ring-1 ring-slate-200 transition-transform hover:scale-105"
+        className="flotante fixed bottom-5 left-5 z-50 flex h-14 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-slate-700 shadow-lg ring-1 ring-slate-200 transition-transform hover:scale-105"
       >
         <span aria-hidden="true" className="text-red-500">
           ♥
@@ -108,7 +102,7 @@ export function FavoritesFloating({ properties }: { properties: Property[] }) {
                           {p.titulo}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {formatoUSD.format(p.precio)}
+                          {formatearPrecio(p)}
                         </p>
                       </Link>
                       <button

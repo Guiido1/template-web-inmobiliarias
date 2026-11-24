@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,7 +17,17 @@
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@^3/dist/decap-cms.js"></script>
+    <!--
+      Versión FIJA + hash de integridad (SRI): si unpkg o el paquete
+      llegaran a servir otro archivo, el navegador se niega a ejecutarlo.
+      Para actualizar Decap: cambiar la versión y recalcular el hash con
+        curl -sL https://unpkg.com/decap-cms@X.Y.Z/dist/decap-cms.js | openssl dgst -sha384 -binary | openssl base64 -A
+    -->
+    <script
+      src="https://unpkg.com/decap-cms@3.18.0/dist/decap-cms.js"
+      integrity="sha384-Vu0vdYOBhK+2KywHCtNZ9sCqpzkwx358AT6pCSg8om/clLoDzpWYF41jrtEk/WMM"
+      crossorigin="anonymous"
+    ></script>
     <script>
       // Si alguien llega sin sesión y hace login, lo manda de nuevo al
       // panel (patrón estándar recomendado por Netlify Identity).

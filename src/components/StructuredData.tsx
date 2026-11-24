@@ -1,11 +1,26 @@
 import { brand } from "@/config/brand";
-import { Property } from "@/lib/properties";
+import { Property, estaDisponible } from "@/lib/properties";
 import { siteUrl } from "@/lib/site";
 
 // Datos estructurados (schema.org) vía JSON-LD. No cambian cómo se ve el
 // sitio, pero le dicen a Google explícitamente qué es cada cosa (una
 // inmobiliaria, un listado de propiedades con precio y ubicación), lo que
 // mejora cómo aparece en resultados de búsqueda (rich snippets).
+
+function oferta(p: Property) {
+  return {
+    "@type": "Offer",
+    price: p.precio,
+    priceCurrency: p.moneda,
+    businessFunction:
+      p.operacion === "Alquiler"
+        ? "http://purl.org/goodrelations/v1#LeaseOut"
+        : "http://purl.org/goodrelations/v1#Sell",
+    availability: estaDisponible(p)
+      ? "https://schema.org/InStock"
+      : "https://schema.org/SoldOut",
+  };
+}
 
 /** Organization — una sola vez en el layout raíz. */
 export function OrganizationStructuredData() {
@@ -63,11 +78,7 @@ export function PropertyCatalogStructuredData({
           unitCode: "MTK",
         },
         numberOfRooms: p.ambientes || undefined,
-        offers: {
-          "@type": "Offer",
-          price: p.precio,
-          priceCurrency: "USD",
-        },
+        offers: oferta(p),
       },
     })),
   };
@@ -99,11 +110,7 @@ export function PropertyStructuredData({ property }: { property: Property }) {
       unitCode: "MTK",
     },
     numberOfRooms: property.ambientes || undefined,
-    offers: {
-      "@type": "Offer",
-      price: property.precio,
-      priceCurrency: "USD",
-    },
+    offers: oferta(property),
   };
 
   return (

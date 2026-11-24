@@ -3,14 +3,14 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { brand } from "@/config/brand";
-import { Property, getTipos, getZonas } from "@/lib/properties";
+import {
+  Property,
+  estaDisponible,
+  formatearPrecio,
+  getTipos,
+  getZonas,
+} from "@/lib/properties";
 import { whatsappLink } from "@/lib/whatsapp";
-
-const formatoUSD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
 
 const RANGOS = [
   { label: "Hasta USD 300.000", max: 300_000 },
@@ -24,7 +24,9 @@ type Paso = "tipo" | "zona" | "precio" | "resultados";
  * Bot guiado por botones, sin IA — costo $0. Usa el mismo catálogo que ya
  * está cargado en la página (prop), no hace ninguna llamada de red.
  */
-export function BasicChatbot({ properties }: { properties: Property[] }) {
+export function BasicChatbot({ properties: todas }: { properties: Property[] }) {
+  // Solo lo que se puede ofrecer: nada vendido ni alquilado.
+  const properties = useMemo(() => todas.filter(estaDisponible), [todas]);
   const [paso, setPaso] = useState<Paso>("tipo");
   const [tipo, setTipo] = useState<string | null>(null);
   const [zona, setZona] = useState<string | null>(null);
@@ -38,7 +40,12 @@ export function BasicChatbot({ properties }: { properties: Property[] }) {
     return properties
       .filter((p) => (tipo ? p.tipo === tipo : true))
       .filter((p) => (zona ? p.zona === zona : true))
-      .filter((p) => (precioMax != null ? p.precio <= precioMax : true))
+      // Los rangos son de compra en USD: con un tope elegido, solo ventas en USD.
+      .filter((p) =>
+        precioMax != null
+          ? p.operacion === "Venta" && p.moneda === "USD" && p.precio <= precioMax
+          : true
+      )
       .slice(0, 3);
   }, [properties, paso, tipo, zona, precioMax]);
 
@@ -163,7 +170,7 @@ export function BasicChatbot({ properties }: { properties: Property[] }) {
                 >
                   <p className="font-medium text-slate-900">{p.titulo}</p>
                   <p className="text-xs text-slate-500">
-                    {p.zona} · {formatoUSD.format(p.precio)}
+                    {p.zona} · {p.operacion} · {formatearPrecio(p)}
                   </p>
                 </Link>
               ))}

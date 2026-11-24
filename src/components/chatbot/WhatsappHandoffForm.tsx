@@ -59,12 +59,17 @@ export function WhatsappHandoffForm({
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
         placeholder="Tu nombre"
+        aria-label="Tu nombre"
+        autoComplete="name"
         className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
       />
       <input
         value={telefono}
         onChange={(e) => setTelefono(e.target.value)}
         placeholder="Teléfono (opcional)"
+        aria-label="Teléfono (opcional)"
+        type="tel"
+        autoComplete="tel"
         className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
       />
       <textarea
@@ -72,6 +77,7 @@ export function WhatsappHandoffForm({
         onChange={(e) => setResumen(e.target.value)}
         rows={2}
         placeholder="¿Qué estás buscando?"
+        aria-label="¿Qué estás buscando?"
         className="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-sm"
       />
 

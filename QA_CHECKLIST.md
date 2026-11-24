@@ -6,6 +6,13 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
 ## Contenido y marca
 - [ ] `src/config/brand.ts` completo con los datos reales del cliente
       (nombre, slogan, colores, WhatsApp, email, teléfono, dirección).
+- [ ] `brand.matricula` con el nombre y la matrícula reales del corredor
+      responsable (obligatorio en publicidad inmobiliaria; se ve en el
+      footer y en la landing de Ads).
+- [ ] `/privacidad` revisada con el cliente (nombre, email y dirección
+      reales; agregar cualquier herramienta extra que use).
+- [ ] `brand.simuladorCredito`: tasa UVA y tipo de cambio de referencia
+      actualizados.
 - [ ] `src/content/properties/*.md` con el catálogo real (no las
       propiedades de ejemplo del template) — cargadas vía `/admin` o a
       mano, no hace falta tocar componentes.
@@ -44,7 +51,11 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
       correctamente (número de `brand.contacto.whatsapp` real, no el de
       ejemplo).
 - [ ] Los filtros de `/propiedades` (zona, tipo, precio) funcionan con el
-      catálogo real cargado.
+      catálogo real cargado, y las propiedades vendidas/alquiladas se
+      muestran con su etiqueta y al final.
+- [ ] Menú hamburguesa en mobile abre y navega; los botones flotantes no
+      quedan tapados con la barra del comparador abierta.
+- [ ] `npm test` pasa.
 - [ ] Los posts del blog renderizan bien (frontmatter completo: `title`,
       `fecha`, `resumen`).
 - [ ] Chatbot: si el cliente tiene mensualidad, `plan.chatbotTier` está en
@@ -57,6 +68,9 @@ Correr esto antes de pasar cualquier sitio de cliente a producción (toma
       de preview, con las URLs del dominio real (no el placeholder).
 - [ ] Título y descripción (`brand.seo`) específicos del cliente, no los
       de "Inmobiliaria Modelo".
+- [ ] Compartir la home y una ficha por WhatsApp muestra la vista previa
+      con imagen (`/opengraph-image` y foto de la propiedad).
+- [ ] `/landing-ads` tiene `noindex` y no muestra el menú.
 
 ## Seguridad
 - [ ] `npm audit` sin vulnerabilidades altas/críticas antes de entregar.

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllPosts } from "@/lib/blog";
+import { formatearFecha, getAllPosts } from "@/lib/blog";
 
 export const metadata = { title: "Blog" };
 
@@ -24,7 +24,7 @@ export default function BlogPage() {
             >
               {post.title}
             </Link>
-            <p className="mt-1 text-sm text-slate-400">{post.fecha}</p>
+            <p className="mt-1 text-sm text-slate-400">{formatearFecha(post.fecha)}</p>
             <p className="mt-2 text-slate-600">{post.resumen}</p>
           </article>
         ))}

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { Property } from "./properties";
+import { normalizarPropiedad, ordenarPropiedades, type Property } from "./properties";
 
 // Carga real del catálogo (usa fs — SOLO se importa desde server
 // components/route handlers, nunca desde un componente "use client").
@@ -13,18 +13,18 @@ import type { Property } from "./properties";
 const CONTENT_DIR = path.join(process.cwd(), "src/content/properties");
 
 export function getAllProperties(): Property[] {
-  const archivos = fs
+  if (!fs.existsSync(CONTENT_DIR)) return [];
+
+  const propiedades = fs
     .readdirSync(CONTENT_DIR)
-    .filter((f) => f.endsWith(".md"));
+    .filter((f) => f.endsWith(".md"))
+    .map((archivo) => {
+      const id = archivo.replace(/\.md$/, "");
+      const fuente = fs.readFileSync(path.join(CONTENT_DIR, archivo), "utf8");
+      return normalizarPropiedad(id, matter(fuente).data);
+    });
 
-  const propiedades = archivos.map((archivo) => {
-    const id = archivo.replace(/\.md$/, "");
-    const fuente = fs.readFileSync(path.join(CONTENT_DIR, archivo), "utf8");
-    const { data } = matter(fuente);
-    return { id, ...data } as Property;
-  });
-
-  return propiedades.sort((a, b) => b.precio - a.precio);
+  return ordenarPropiedades(propiedades);
 }
 
 export function getPropertyById(id: string): Property | undefined {
