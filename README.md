@@ -9,7 +9,13 @@ una vez por cliente y personalizarse editando un único archivo de config.
 - Next.js (App Router) + TypeScript
 - Tailwind CSS v4
 - Blog en MDX (`src/content/blog`)
-- Deploy recomendado: Vercel (plan gratuito)
+- Deploy recomendado: **Netlify** (plan gratuito permite uso comercial,
+  a diferencia del Hobby de Vercel — ver `netlify.toml`)
+- SEO: sitemap y robots.txt automáticos (`src/app/sitemap.ts`,
+  `src/app/robots.ts`) + datos estructurados schema.org
+  (`src/components/StructuredData.tsx`)
+- Analítica opcional para reporte al cliente: Google Analytics 4
+  (`src/components/Analytics.tsx`, se activa cargando un ID en `brand.ts`)
 
 ## Cómo usar este template para un cliente nuevo
 
@@ -30,8 +36,13 @@ una vez por cliente y personalizarse editando un único archivo de config.
    (`title`, `fecha`, `resumen`) en `src/content/blog/`.
 5. **Reemplazar imágenes**: subir fotos reales a `public/properties/` y
    actualizar las rutas en `properties.ts`.
-6. **Deploy**: conectar el repo a Vercel. El dominio lo registra el cliente
-   a su nombre, apuntando el DNS al proyecto de Vercel.
+6. **Deploy**: conectar el repo a Netlify. Configurar la variable de
+   entorno `NEXT_PUBLIC_SITE_URL` con el dominio real del cliente (la usan
+   el sitemap, robots.txt y los datos estructurados). El dominio lo
+   registra el cliente a su nombre, apuntando el DNS al proyecto de
+   Netlify.
+7. **Pasar el checklist de QA** (`QA_CHECKLIST.md`) antes de avisarle al
+   cliente que el sitio está listo.
 
 ## Desarrollo local
 
@@ -58,13 +69,28 @@ src/
     landing-ads/            # landing de alta conversión para campañas pagas
 ```
 
+## Documentos relacionados
+
+- `QA_CHECKLIST.md` — checklist a correr antes de entregar cualquier sitio.
+- `UPGRADING.md` — cómo propagar mejoras de este template a los repos de
+  clientes con mantenimiento.
+- `REPORTING_TEMPLATE.md` — plantilla del reporte mensual de resultados
+  para clientes con mensualidad.
+
 ## Pendiente / a definir
 
-- **CMS headless Git-based** (tipo Decap CMS) en `/admin` para que el
-  cliente cargue propiedades y posts sin tocar código.
-- **Estándares de seguridad**: headers de seguridad, auth de `/admin`,
-  gestión de secrets/env vars, protección anti-spam del formulario de
-  contacto, actualización de dependencias.
+- **CMS headless Git-based** (tipo Decap CMS, con Netlify Identity + Git
+  Gateway) en `/admin` para que el cliente cargue propiedades y posts sin
+  tocar código.
+- **Chatbot** con dos niveles (básico guiado por botones / inteligente
+  con Claude Haiku) — pendiente de implementación.
+- **Auth de `/admin`** y gestión de secrets/env vars más allá de lo ya
+  cubierto en `netlify.toml` (headers de seguridad base) — protección
+  anti-spam del formulario de contacto, actualización de dependencias
+  (Dependabot).
+- Funcionalidades distintivas del plan base y del plan con mensualidad
+  (comparador de propiedades, favoritos, simulador de crédito, alertas,
+  video/tour, versión en inglés) — ver el plan del proyecto.
 
 ## Convención de commits
 
