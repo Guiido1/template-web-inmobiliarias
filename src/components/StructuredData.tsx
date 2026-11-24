@@ -1,5 +1,5 @@
 import { brand } from "@/config/brand";
-import { properties } from "@/data/properties";
+import { Property, properties } from "@/data/properties";
 import { siteUrl } from "@/lib/site";
 
 // Datos estructurados (schema.org) vía JSON-LD. No cambian cómo se ve el
@@ -34,9 +34,8 @@ export function OrganizationStructuredData() {
 
 /**
  * ItemList de RealEstateListing — una por propiedad del catálogo actual.
- * Se usa en /propiedades. Si en el futuro se suman páginas de detalle por
- * propiedad (con su propia URL), este bloque pasa a vivir en esa página
- * individual en vez de en el listado.
+ * Se usa en /propiedades. Cada item linkea a su página de detalle propia
+ * (ver PropertyStructuredData más abajo, que se usa en esa página).
  */
 export function PropertyCatalogStructuredData() {
   const data = {
@@ -48,7 +47,7 @@ export function PropertyCatalogStructuredData() {
       item: {
         "@type": "RealEstateListing",
         name: p.titulo,
-        url: `${siteUrl}/propiedades`,
+        url: `${siteUrl}/propiedades/${p.id}`,
         image: `${siteUrl}${p.imagen}`,
         address: {
           "@type": "PostalAddress",
@@ -67,6 +66,40 @@ export function PropertyCatalogStructuredData() {
         },
       },
     })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+/** RealEstateListing completo de una sola propiedad — se usa en su página de detalle. */
+export function PropertyStructuredData({ property }: { property: Property }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: property.titulo,
+    description: property.descripcion ?? brand.seo.descripcionDefault,
+    url: `${siteUrl}/propiedades/${property.id}`,
+    image: (property.imagenes ?? [property.imagen]).map((i) => `${siteUrl}${i}`),
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: property.zona,
+    },
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: property.m2,
+      unitCode: "MTK",
+    },
+    numberOfRooms: property.ambientes || undefined,
+    offers: {
+      "@type": "Offer",
+      price: property.precio,
+      priceCurrency: "USD",
+    },
   };
 
   return (

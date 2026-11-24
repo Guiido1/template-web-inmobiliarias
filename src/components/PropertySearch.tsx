@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Property, properties, tipos, zonas } from "@/data/properties";
 
 const formatoUSD = new Intl.NumberFormat("en-US", {
@@ -66,33 +67,36 @@ export function PropertySearch() {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtradas.map((p) => (
-          <article
+          <Link
             key={p.id}
-            className="overflow-hidden rounded-2xl border border-slate-200 bg-white"
+            href={`/propiedades/${p.id}`}
+            className="group overflow-hidden rounded-2xl border border-slate-200 bg-white"
           >
-            <div className="relative h-44 w-full">
-              <Image
-                src={p.imagen}
-                alt={p.titulo}
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="p-5">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-                {p.zona} · {p.tipo}
-              </p>
-              <h3 className="mt-1 font-medium text-slate-900">{p.titulo}</h3>
-              <p className="mt-2 text-sm text-slate-500">
-                {p.ambientes > 0 ? `${p.ambientes} amb. · ` : ""}
-                {p.m2} m²
-              </p>
-              <p className="mt-3 text-lg font-semibold text-slate-900">
-                {formatoUSD.format(p.precio)}
-              </p>
-            </div>
-          </article>
+            <article>
+              <div className="relative h-44 w-full">
+                <Image
+                  src={p.imagen}
+                  alt={p.titulo}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform group-hover:scale-105"
+                />
+              </div>
+              <div className="p-5">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                  {p.zona} · {p.tipo}
+                </p>
+                <h3 className="mt-1 font-medium text-slate-900">{p.titulo}</h3>
+                <p className="mt-2 text-sm text-slate-500">
+                  {p.ambientes > 0 ? `${p.ambientes} amb. · ` : ""}
+                  {p.m2} m²
+                </p>
+                <p className="mt-3 text-lg font-semibold text-slate-900">
+                  {formatoUSD.format(p.precio)}
+                </p>
+              </div>
+            </article>
+          </Link>
         ))}
 
         {filtradas.length === 0 && (
