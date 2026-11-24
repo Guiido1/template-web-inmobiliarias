@@ -1,0 +1,22 @@
+version: 2
+updates:
+  # Dependencias npm del sitio (Next.js, React, Tailwind, etc.)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      # Agrupa actualizaciones menores/parche en un solo PR para no saturar
+      # de PRs individuales — las de versión mayor siguen llegando aparte,
+      # porque suelen traer breaking changes que conviene revisar solas.
+      minor-y-parche:
+        update-types:
+          - "minor"
+          - "patch"
+    open-pull-requests-limit: 10
+
+  # Las propias GitHub Actions del workflow de CI (ci.yml)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
